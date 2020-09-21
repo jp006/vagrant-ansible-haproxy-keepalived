@@ -3,7 +3,7 @@ Vagrant.configure(2) do |config|
   N = 2
   (1..N).each do |i|
     config.vm.define "haproxy#{i}" do |node|
-      node.vm.box = "cent0s7"
+      node.vm.box = "centos/7"
       node.vm.synced_folder ".", "/vagrant", disabled: true
       node.vm.hostname = "haproxy#{i}"
       node.vm.network "private_network", ip:"10.0.26.20#{i}"
@@ -12,7 +12,9 @@ Vagrant.configure(2) do |config|
         vb.name = "haproxy#{i}"
       end
       node.vm.provision "shell", path: "shell/iptables.sh"
+      node.vm.provision "shell", path: "shell/ssh_config.sh"
       node.vm.provision "shell", inline: "service network restart"
+      node.vm.provision "shell", inline: "service sshd restart"
     end
   end
 
@@ -20,7 +22,7 @@ Vagrant.configure(2) do |config|
     config.vm.define "web#{i}" do |app|
       app.vm.network "private_network", ip:"10.0.26.10#{i}"
       app.vm.hostname = "app#{i}"
-      app.vm.box = "cent0s7"
+      app.vm.box = "centos/7"
       app.vm.synced_folder ".", "/vagrant", disabled: true
       app.vm.box_check_update = false
       app.vm.provider "virtualbox" do |vb|
@@ -28,14 +30,17 @@ Vagrant.configure(2) do |config|
         vb.name = "web#{i}"
       end
       app.vm.provision "shell", path: "shell/iptables.sh"
+      app.vm.provision "shell", path: "shell/ssh_config.sh"
       app.vm.provision "shell", inline: "service network restart"
+      app.vm.provision "shell", inline: "service sshd restart"
+
   end
 end
 
   config.vm.define "mgmt" do |mgmt|
       mgmt.vm.network "private_network", ip:"10.0.26.10"
       mgmt.vm.hostname = "mgmt"
-      mgmt.vm.box = "cent0s7"
+      mgmt.vm.box = "centos/7"
       mgmt.vm.synced_folder ".", "/vagrant", disabled: true
       mgmt.vm.box_check_update = false
       mgmt.vm.provider "virtualbox" do |vb|
