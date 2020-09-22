@@ -36,7 +36,7 @@ Tools needed for Environment setup:
 
 1. Installed Virtualbox (=5.1.12 version)
 2. Installed Vagrant (>=1.9.1 version)
-3. Imported Centos 7 box (`vagrant box add cent0s7 image.box`)
+3. Imported Centos 7 box (`vagrant box add centos/7 image.box`)
 
 By default ansible is using `vagrant` username and `vagrant` password for ssh connection.
 
@@ -99,7 +99,8 @@ lb1: http://10.0.26.101
 lb2: http://10.0.26.102
 
 ####LB Statistic page
-http://127.0.0.1:8080/stats
+http://10.0.26.101:8080/stats
+http://10.0.26.102:8080/stats
 
     username: stat
     password: statpass
